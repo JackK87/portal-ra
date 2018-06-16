@@ -10,7 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', 'WelcomeController@welcome');
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['prefix' => 'workzone'], function() {	
+	Route::get('excel', ['as' => 'show-excel', 'uses' => 'ExcelController@show']);	
 });
+
+Route::group(['prefix' => 'media'],function() {
+	Route::get('music', ['as' => 'show-music', 'uses' => 'MediaController@show_music']);
+});
+
