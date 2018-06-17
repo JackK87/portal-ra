@@ -13,7 +13,8 @@
 Route::get('/', 'WelcomeController@welcome');
 
 Route::group(['prefix' => 'workzone'], function() {	
-	Route::get('excel', ['as' => 'show-excel', 'uses' => 'ExcelController@show']);	
+	Route::get('/', ['as' => 'work-zone', 'uses' => 'ExcelController@show']);
+	Route::match(['get', 'post'],'find_data', ['as' => 'find-data-excel', 'uses' => 'ExcelController@find_data']);
 });
 
 Route::group(['prefix' => 'media'],function() {

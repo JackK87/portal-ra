@@ -15,7 +15,7 @@
         <li><a href="#">Видео</a></li>		            
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Рабочая зона</a></li>
+        <li><a href="{{ route('work-zone') }}">Рабочая зона</a></li>
       </ul>
     </nav>
   </div>
