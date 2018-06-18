@@ -31,12 +31,14 @@ class ExcelController extends Controller
 						
 			$file->move($destinationPath, $fileName);
 			
-			Excel::load($fullPath, function($reader) {
-        		$results = $reader->get();
-        		dd($results);
-    		});
+			$data = [];
+			
+			$reader = Excel::load($fullPath, function($reader){})->get();
     		
-			return view('default.excel.find_data', ['message' => 'hekko']);
+    		foreach($reader as $row)
+				$data[] = [ $row->getTitle() => $row->getHeading()];
+			//dd($fields);   		
+			return view('default.excel.find_data', compact('data'));
 		}
 		else if ('get'){
 			//abort('404');

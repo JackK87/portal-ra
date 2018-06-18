@@ -27,6 +27,10 @@ footer{
 	padding-right: 10px;	
 }
 
+.field, .sheet{
+	cursor: pointer;
+}
+
 /*Bootstrap button outline override*/
 .btn-outline {
     background-color: transparent;
