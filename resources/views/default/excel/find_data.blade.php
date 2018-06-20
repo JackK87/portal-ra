@@ -56,29 +56,131 @@
 @section('scripts')
 <script>
 
+var primary = {
+	sheet: null,
+	fields: {}	
+};
+
+var secondory = {};
+
+var secondoryFields = [];
+
 $('.sheet').on('click', function(e){
 	
-	if (e.target.nodeName == 'DIV'){
-		$('div[data-primary]').each(function(){
-			if ($(this).hasClass('panel-success')){
-				$(this).removeClass('panel-success').addClass('panel-default').attr('data-primary', 'secondery');
-			}
-		});
-		
-		$(this).removeClass('panel-default').addClass('panel-success').attr('data-primary', 'primary');	
-	}
+	var div = $(this);
 	
+	if (e.target.nodeName == 'DIV'){
+		setPanelClass('panel-success', div);
+		
+		primary.sheet = div.children('.panel-heading').text();	
+		
+		if (primary.sheet in secondory)
+			delete secondory[primary.sheet];
+			
+		clearFields(primary);	
+	}	
 })
 
 $(".field").on("click", function(){
 	
-	if($(this).parent().parent().hasClass('panel-success')){
-		$(this).removeClass('label-info').addClass('label-success');
+	var span = $(this);
+	var key = span.text().split(' - ')[1];
+	var value = span.text().split(' - ')[0];
+	var sheetName = span.parent().parent().children('.panel-heading').text();
+	
+	if(span.parent().parent().hasClass('panel-success')){
+		setLabelClass('label-success', span);
+		
+		setFields(primary, key, value);				
+	}
+	else{		
+		setLabelClass('label-warning', span);		
+		
+		setSeconoryField(sheetName, span);
+	}	
+	
+	console.log(secondory);
+})
+
+function clearPanels(panels){
+	
+	panels.each(function(){
+		
+		if ($(this).hasClass('panel-success'))
+			$(this).removeClass('panel-success').addClass('panel-default').attr('data-primary', 'secondery');
+			
+			$(this).find('.label-success').each(function(){
+				$(this).removeClass().addClass('label label-info field');
+			});
+	});
+}
+
+function setPanelClass(panel_class, div){
+		
+	if (div.hasClass(panel_class)){				
+		div.removeClass(panel_class).addClass('panel-default').attr('data-primary', 'secondery');	}
+	else{		
+		clearPanels($('div[data-primary]'));
+		div.removeClass('panel-default').addClass(panel_class).attr('data-primary', 'primary');					
+	}
+	
+	div.find('span').each(function(){
+		$(this).removeClass().addClass('label label-info field');
+	});
+}
+
+function setLabelClass(lable_class, span){	
+	
+	if (span.hasClass('label-info')){	
+		span.removeClass('label-info').addClass(lable_class);	
 	}
 	else{
-		$(this).removeClass('label-info').addClass('label-warning');	
+		span.removeClass(lable_class).addClass('label-info');
 	}	
-})
+}
+
+function setFields(obj, key, value){
+	if (key in obj.fields)
+		delete obj.fields[key];
+	else
+		obj.fields[key] = value;
+}
+
+function setSeconoryField(sheetName, span){
+	
+	if (sheetName in secondory){
+			
+			var arr = secondory[sheetName];
+			var field = span.text();
+			
+			if (arr.length > 0){
+				
+				for (var i = 0; i < arr.length; i++){
+					if (arr[i] == field){						
+						arr.splice(i,1);
+						
+						if (arr.length < 1)
+							delete secondory[sheetName];
+						
+						return;
+					}	
+				}
+			}
+			
+			secondory[sheetName].push(field);
+		}
+	else{
+		secondory[sheetName] = [];
+		secondory[sheetName].push(span.text());
+	}
+	
+}
+
+function clearFields(obj){
+	for (var key in obj.fields)
+		delete obj.fields[key];	
+}
+
 </script>
 
 
